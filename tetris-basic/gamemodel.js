@@ -69,6 +69,53 @@ class GameModel {
                     }
                 })
             });
+
+            // check gme over
+            if (this.fallingPiece.y === 0) {
+                alert("Game Over!");
+                this.grid = this.makeStaringGrid();
+            }
+            this.fallingPiece = null;
+        } else {
+            this.fallingPiece.y += 1;
         }
+        this.renderGameState();
+    }
+
+    move(right){
+        if (this.fallingPiece === null) {
+            return;
+        }
+        let x = this.fallingPiece.x;
+        let y = this.fallingPiece.y;
+        if (right) {
+            // move right
+            if (!this.collision(x + 1, y)) {
+                this.fallingPiece.x += 1;
+            }
+        } else {
+            // move left
+            if (!this.collision(x - 1, y)) {
+                this.fallingPiece.x -= 1;
+            }
+        }
+        this.renderGameState();
+    }
+
+    rotate(){
+        if(this.fallingPiece !== null){
+            let shape = this.fallingPiece.shape;
+            // transpose of matrix
+            for(let y = 0; y < shape.length; y++){
+                for(let x = 0; x < y; x++){
+                    [this.fallingPiece.shape[x][y], this.fallingPiece.shape[y][x]] = 
+                    [this.fallingPiece.shape[y][x], this.fallingPiece.shape[x][y]];
+                }
+            }
+
+            // reverse each row
+            this.fallingPiece.shape.forEach(row => row.reverse());
+        }
+        this.renderGameState();
     }
 }
